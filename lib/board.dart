@@ -35,7 +35,75 @@ class _GameBoardState extends State<GameBoard> {
 
 
   // current Tetrus piece
-  Piece currentPiece = Piece(type:Tetromino.T);
+  Piece currentPiece = Piece(type:Tetromino.L);
+
+  // current score
+  int currentScore = 0;
+
+  // game over status
+  bool gameOver = false;
+
+  // move left
+  void moveLeft(){
+    if(!checkCollision(Direction.left)){
+      setState(() {
+        currentPiece.movePiece(Direction.left);
+      });
+    }
+  }
+
+  // move right
+  void moveRight(){
+    if(!checkCollision(Direction.right)){
+      setState(() {
+        currentPiece.movePiece(Direction.right);
+      });
+    }
+  }
+
+  // rotate
+  void moveRotate(){
+    setState(() {
+      currentPiece.rotatePiece();
+    });
+  }
+
+  // clear lines
+  void clearLine() {
+    // step 1: Loop Through each row of the game board from bottom to top
+    for(int row = colLength -1; row >= 0; row--)
+    {
+      // step 2: Initialize a avariable to track if the row is full
+      bool isRowFull = true;
+
+      // step 3: Check if the row is full (all column in the row are not null)
+      for(int col = 0; col < rowLength; col++)
+      {
+        // if there's an empty column, set rowISfull to false and break out of the loop
+        if(gameBoard[row][col] == null)
+        {
+          isRowFull = false;
+          break;
+        }
+      }
+
+      // Step 4: if the row is full, clear the row and shift row down
+      if(isRowFull) {
+        // step 5: move all rows above the current row down by 1
+        for(int r = row; r > 0; r--) {
+          // copy the above row to the current row
+          gameBoard[r] = List.from(gameBoard[r-1]);
+        }
+
+        // step 6: clear the top row
+        gameBoard[0] = List.generate(rowLength, (index) => null);
+
+        // step 7: increment the score
+        currentScore++;
+        
+      }
+    }
+  }
 
   @override
 
@@ -62,14 +130,69 @@ class _GameBoardState extends State<GameBoard> {
       (timer){
         setState(() {
 
+          // clear lines
+          clearLine();
+
           // check now for landing
           checkLandig();
+
+          // check if the game is over or not?
+          if(gameOver){
+            timer.cancel();
+            showGameOverDialog();
+          }
           
           // move current piece down
           currentPiece.movePiece(Direction.down);
         });
       }
     );
+  }
+
+  // show game over dialog
+  void showGameOverDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Game Over'),
+        content: Text('Your Score: $currentScore'),
+        actions: [
+          TextButton(
+            onPressed: (){
+              // reset the game
+              resetGame();
+              // close the dialog
+              Navigator.of(context).pop();
+            }, 
+            child: Text('Play Again')
+            ),
+        ],
+      )
+    );
+  }
+
+  // reset game
+  void resetGame(){
+    // reset the game board
+    gameBoard = List.generate(
+      colLength,
+      (i) => List.generate(
+        rowLength,
+        (j) => null,
+      ),
+    );
+
+    // reset the score
+    currentScore = 0;
+
+    // reset the game over status
+    gameOver = false;
+
+    // create a new piece
+    createNewPiece();
+
+    // start the game
+    startGame();
   }
 
   // check for collision in a future position
@@ -135,42 +258,115 @@ class _GameBoardState extends State<GameBoard> {
     currentPiece = Piece(type: randomType);
     currentPiece.initializePiece();
 
+    // check if the game is over
+    if(isGameOver()){
+      // stop the game loop
+      gameOver = true;
+    }
+
   }
+
+  // GAME OVER MESSAGE
+  bool isGameOver(){
+    // loop through the top row of the game board
+    for(int col = 0; col < rowLength; col++){
+      // if the top row is occupied, return true
+      if(gameBoard[0][col] != null){
+        return true;
+      }
+    }
+    // if the top row is not occupied, return false
+    return false;
+  }
+
 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: GridView.builder(
-      itemCount: rowLength * colLength,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: rowLength),
-      itemBuilder:(context, index) {
-        // get row and col of each index
-        int row = (index / rowLength).floor();
-        int col = (index % rowLength);
-      if(currentPiece.position.contains(index))
-      {
-        // current Piece
-        return Pixel(
-          color: Colors.cyanAccent,
-          child: index.toString(),
-          );
-      }
-      // landed pieces
-      else if(gameBoard[row][col] != null) {
-        return Pixel(
-          color: Colors.pinkAccent,
-          child: '',
-          );
-      }
-      // blank pixel
-      else{
-        return Pixel(
-          color: Colors.grey[900],
-          child: index.toString(),
-        );
-      }
-      }
+      body: Column(
+        children: [
+
+          //GAME GRID
+          Expanded(
+            child: GridView.builder(
+            itemCount: rowLength * colLength,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: rowLength),
+            itemBuilder:(context, index) {
+              // get row and col of each index
+              int row = (index / rowLength).floor();
+              int col = (index % rowLength);
+            if(currentPiece.position.contains(index))
+            {
+              // current Piece
+              return Pixel(
+                color: currentPiece.color,
+                );
+            }
+            // landed pieces
+            else if(gameBoard[row][col] != null) {
+              final Tetromino? tetrominoType = gameBoard[row][col];
+              return Pixel(
+                color: tetrominoColors[tetrominoType]!,
+                );
+            }
+            // blank pixel
+            else{
+              return Pixel(
+                color: Colors.grey[900],
+              );
+            }
+            }
+            ),
+          ),
+          
+          // Score
+          Text(
+            'Score: $currentScore',
+            style: TextStyle(
+              color: Colors.white,
+              // fontSize: 30,
+            ),
+          ),
+
+          // GAME CONTROLS
+          Padding(
+            padding: const EdgeInsets.only(bottom: 50, top: 25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(onPressed: (){},
+                 child:Text('PLAY', style: TextStyle(fontSize: 40),)
+                  ),
+
+                // left button
+                IconButton(
+                  onPressed: moveLeft,
+                  color: Colors.white,
+                  // iconSize: 50, 
+                  icon: Icon(Icons.arrow_back_ios),
+                  ),
+          
+                  // rotate button
+                IconButton(
+                  onPressed: moveRotate,
+                  color: Colors.white,
+                  // iconSize: 50,   
+                  icon: Icon(Icons.rotate_right),
+                  ),
+          
+                // right button
+                IconButton(
+                  onPressed: moveRight,
+                  color: Colors.white,
+                  // iconSize: 50,  
+                  icon: Icon(Icons.arrow_forward_ios),
+                  ),
+          
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

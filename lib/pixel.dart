@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 class Pixel extends StatelessWidget {
   var color;
-  var child;
   Pixel({super.key,
     required this.color,
-    required this.child,
     });
 
 
@@ -17,11 +15,6 @@ class Pixel extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       margin: EdgeInsets.all(1),
-      child: Center(
-        child: Text(
-          child,
-          style: TextStyle(color: Colors.white),
-        )),
     );
   }
 }
