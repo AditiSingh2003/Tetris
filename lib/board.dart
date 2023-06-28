@@ -97,7 +97,14 @@ class _GameBoardState extends State<GameBoard> {
       if(row >= colLength || col <0 || col >= rowLength){
         return true;
       }
+      if (row >= 0 && col >= 0 && gameBoard[row][col] != null &&
+          !currentPiece.position.contains(row * rowLength + col)) {
+        return true;
+      }
     }
+
+    
+
       // if no collison are detected, return false
       return false;
   }
@@ -127,6 +134,7 @@ class _GameBoardState extends State<GameBoard> {
       Tetromino.values[rand.nextInt(Tetromino.values.length)];
     currentPiece = Piece(type: randomType);
     currentPiece.initializePiece();
+
   }
 
   Widget build(BuildContext context) {
@@ -160,7 +168,6 @@ class _GameBoardState extends State<GameBoard> {
         return Pixel(
           color: Colors.grey[900],
           child: index.toString(),
-
         );
       }
       }
