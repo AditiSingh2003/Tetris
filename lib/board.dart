@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:tetris/piece.dart';
 import 'package:tetris/pixel.dart';
 import 'package:tetris/values.dart';
@@ -99,7 +100,7 @@ class _GameBoardState extends State<GameBoard> {
         gameBoard[0] = List.generate(rowLength, (index) => null);
 
         // step 7: increment the score
-        currentScore++;
+        currentScore +=10;
         
       }
     }
@@ -118,7 +119,7 @@ class _GameBoardState extends State<GameBoard> {
     currentPiece.initializePiece();
 
     // frame refresh rate
-    Duration frameRate = const Duration(milliseconds: 400);
+    Duration frameRate = const Duration(milliseconds: 700);
     gameLoop(frameRate);
   }
 
@@ -139,7 +140,7 @@ class _GameBoardState extends State<GameBoard> {
           // check if the game is over or not?
           if(gameOver){
             timer.cancel();
-            showGameOverDialog();
+            showAlert();
           }
           
           // move current piece down
@@ -149,25 +150,21 @@ class _GameBoardState extends State<GameBoard> {
     );
   }
 
-  // show game over dialog
-  void showGameOverDialog() {
-    showDialog(
+  // 
+  void showAlert(){
+    QuickAlert.show(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Game Over'),
-        content: Text('Your Score: $currentScore'),
-        actions: [
-          TextButton(
-            onPressed: (){
-              // reset the game
+      title: 'Game Over',
+      text:'Your Score: $currentScore',
+      type: QuickAlertType.warning,
+      confirmBtnColor: Color(0xFF008181),
+      confirmBtnText: 'Play Again',
+      onConfirmBtnTap: (){
+        // reset the game
               resetGame();
               // close the dialog
               Navigator.of(context).pop();
-            }, 
-            child: Text('Play Again')
-            ),
-        ],
-      )
+      }
     );
   }
 
@@ -321,29 +318,30 @@ class _GameBoardState extends State<GameBoard> {
           ),
           
           // Score
-          Text(
-            'Score: $currentScore',
-            style: TextStyle(
-              color: Colors.white,
-              // fontSize: 30,
-            ),
-          ),
 
           // GAME CONTROLS
           Padding(
-            padding: const EdgeInsets.only(bottom: 50, top: 25),
+            padding: const EdgeInsets.only(bottom: 50),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(onPressed: (){},
-                 child:Text('PLAY', style: TextStyle(fontSize: 40),)
+                ElevatedButton(onPressed: (){
+                  resetGame();
+                },
+                 child:Text('PLAY',
+                  style: TextStyle(fontSize: 30)
+                  ,),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(8.0), // Adjust the padding as needed
+                    backgroundColor: Color(0xFF008181)
+                  ),
                   ),
 
                 // left button
                 IconButton(
                   onPressed: moveLeft,
                   color: Colors.white,
-                  // iconSize: 50, 
+                  iconSize: 40, 
                   icon: Icon(Icons.arrow_back_ios),
                   ),
           
@@ -351,7 +349,7 @@ class _GameBoardState extends State<GameBoard> {
                 IconButton(
                   onPressed: moveRotate,
                   color: Colors.white,
-                  // iconSize: 50,   
+                  iconSize: 40,   
                   icon: Icon(Icons.rotate_right),
                   ),
           
@@ -359,7 +357,7 @@ class _GameBoardState extends State<GameBoard> {
                 IconButton(
                   onPressed: moveRight,
                   color: Colors.white,
-                  // iconSize: 50,  
+                  iconSize: 40,  
                   icon: Icon(Icons.arrow_forward_ios),
                   ),
           

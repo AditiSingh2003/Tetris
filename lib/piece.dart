@@ -55,7 +55,7 @@ class Piece{
 
       case Tetromino.S:
       position =[
-        -15,-16,-6,-5,
+        -5,-6,-15,-14,
       ];
       break;
 
@@ -315,7 +315,7 @@ class Piece{
             newPosition =[
               position[1] + rowLength ,
               position[1],
-              position[1] + rowLength,
+              position[1] - rowLength,
               position[1] - 2 * rowLength,
               ];
 
@@ -330,10 +330,6 @@ class Piece{
           }
         break;
 
-          // O block
-          case Tetromino.O:
-          
-          break;
 
           // S block
 
@@ -410,14 +406,14 @@ class Piece{
         break;
 
         // Z case
-        case Tetromino.L:
+        case Tetromino.Z:
           switch(rotationState){
               case 0:
             newPosition =[
-              position[1] + rowLength - 2,
+              position[0] + rowLength - 2,
               position[1],
-              position[1] + rowLength -1,
-              position[1] +1,
+              position[2] + rowLength -1,
+              position[3] +1,
               ];
 
               if(piecePositonIsValid(newPosition)){
@@ -431,10 +427,10 @@ class Piece{
               // case 1
               case 1:
             newPosition =[
-              position[1] - rowLength + 2,
+              position[0] - rowLength + 2,
               position[1],
-              position[1] - rowLength + 1,
-              position[1] - 1,
+              position[2] - rowLength + 1,
+              position[3] - 1,
               ];
 
              if(piecePositonIsValid(newPosition)){
@@ -447,10 +443,10 @@ class Piece{
 
               case 2:
             newPosition =[
-              position[1] + rowLength - 2,
+              position[0] + rowLength - 2,
               position[1],
-              position[1] + rowLength - 1,
-              position[1] + 1,
+              position[2] + rowLength - 1,
+              position[3] + 1,
               ];
 
               // update position
@@ -465,10 +461,10 @@ class Piece{
               // case 3:
               case 3:
             newPosition =[
-              position[1] - rowLength + 2,
+              position[0] - rowLength + 2,
               position[1],
-              position[1] - rowLength + 1,
-              position[1] - 1,
+              position[2] - rowLength + 1,
+              position[3] - 1,
               ];
 
               // update position
@@ -483,7 +479,7 @@ class Piece{
           break;
 
           // T case
-          case Tetromino.L:
+          case Tetromino.T:
           switch(rotationState){
               case 0:
             newPosition =[

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tetris/start.dart';
 
 import 'board.dart';
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: GameBoard(),
+      home: Start(),
     );
   }
 }
