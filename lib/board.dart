@@ -41,6 +41,9 @@ class _GameBoardState extends State<GameBoard> {
   // current score
   int currentScore = 0;
 
+  //max score
+  int maxScore = 0;
+
   // game over status
   bool gameOver = false;
 
@@ -101,7 +104,12 @@ class _GameBoardState extends State<GameBoard> {
 
         // step 7: increment the score
         currentScore +=10;
-        
+
+        //step 8: Check Max Score
+        if(maxScore < currentScore)
+          {
+            maxScore = currentScore;
+          }
       }
     }
   }
@@ -282,7 +290,6 @@ class _GameBoardState extends State<GameBoard> {
       backgroundColor: Colors.black,
       body: Column(
         children: [
-
           //GAME GRID
           Expanded(
             child: GridView.builder(
@@ -325,42 +332,79 @@ class _GameBoardState extends State<GameBoard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(onPressed: (){
+                Column(
+                  children: [
+                    // Text
+                    Text("SCORE : $currentScore",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      ),
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 20)),
+
+                    //  Play Button
+                  ElevatedButton(onPressed: (){
                   resetGame();
                 },
-                 child:Text('PLAY',
-                  style: TextStyle(fontSize: 30)
-                  ,),
+                child:Text('PLAY',
+                  style: TextStyle(fontSize: 30),
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.all(8.0), // Adjust the padding as needed
-                    backgroundColor: Color(0xFF008181)
+                    backgroundColor: Color(0xFF008181),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
                   ),
                   ),
+                  ],
+                ),
 
                 // left button
-                IconButton(
-                  onPressed: moveLeft,
-                  color: Colors.white,
-                  iconSize: 40, 
-                  icon: Icon(Icons.arrow_back_ios),
-                  ),
-          
-                  // rotate button
-                IconButton(
-                  onPressed: moveRotate,
-                  color: Colors.white,
-                  iconSize: 40,   
-                  icon: Icon(Icons.rotate_right),
-                  ),
-          
-                // right button
-                IconButton(
-                  onPressed: moveRight,
-                  color: Colors.white,
-                  iconSize: 40,  
-                  icon: Icon(Icons.arrow_forward_ios),
-                  ),
-          
+                Column(
+                  children: [
+                    Text("MAX SCORE : $maxScore",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(padding: EdgeInsets.only(bottom: 20)),
+
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: moveLeft,
+                          color: Colors.white,
+                          iconSize: 30,
+                          icon: Icon(Icons.arrow_back_ios),
+                        ),
+
+                        // rotate button
+                        IconButton(
+                          onPressed: moveRotate,
+                          color: Colors.white,
+                          iconSize: 30,
+                          icon: Icon(Icons.rotate_right),
+                        ),
+
+                        // right button
+                        IconButton(
+                          onPressed: moveRight,
+                          color: Colors.white,
+                          iconSize: 30,
+                          icon: Icon(Icons.arrow_forward_ios),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+
               ],
             ),
           ),

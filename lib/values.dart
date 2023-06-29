@@ -11,7 +11,7 @@ enum Tetromino{
 }
   // grid dimension
   int rowLength=10;
-  int colLength = 16;
+  int colLength = 15;
 
 enum Direction{
   left,
