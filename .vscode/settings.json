@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/Flutterprojects/tetris/linux"
+    "cmake.sourceDirectory": "D:/Flutterprojects/tetris/linux",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

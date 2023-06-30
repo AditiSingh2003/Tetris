@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "404119814742",
+    "project_id": "tetris-fd07a",
+    "storage_bucket": "tetris-fd07a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404119814742:android:63069d5c380ed46c5ab1f7",
+        "android_client_info": {
+          "package_name": "com.example.tetris"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404119814742-8ns7d3pd12f6pbsp7e2ps7rrpctfv0s0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATi48lRpMnAyt8gRCXZcT6u_q11OnWa7I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404119814742-8ns7d3pd12f6pbsp7e2ps7rrpctfv0s0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
